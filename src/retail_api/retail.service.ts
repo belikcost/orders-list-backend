@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { CrmType, Order, OrdersFilter, RetailPagination } from './types'
 import axios, { AxiosInstance } from 'axios'
-import { ConcurrencyManager } from 'axios-concurrency'
+
 import { serialize } from '../tools'
 import { plainToClass } from 'class-transformer'
 
@@ -13,7 +13,7 @@ export class RetailService {
     this.axios = axios.create({
       baseURL: `${process.env.RETAIL_URL}/api/v5`,
       timeout: 10000,
-      headers: { },
+      headers: { 'X-API-KEY': process.env.RETAIL_KEY },
     })
 
     this.axios.interceptors.request.use((config) => {
@@ -44,19 +44,27 @@ export class RetailService {
     return [orders, pagination]
   }
 
-  async findOrder(id: string): Promise<Order | null> {
-
+  async findOrder(id: number): Promise<Order | null> {
+    const resp = await this.axios.get(`/orders/${id}`, { params: { by: 'id' } })
+    if (!resp.data) throw new Error('RETAIL CRM ERROR')
+    return resp.data.order
   }
 
   async orderStatuses(): Promise<CrmType[]> {
-
+    const resp = await this.axios.get('/order-statuses')
+    if (!resp.data) throw new Error('RETAIL CRM ERROR')
+    return resp.data
   }
 
   async productStatuses(): Promise<CrmType[]> {
-
+    const resp = await this.axios.get('/product-statuses')
+    if (!resp.data) throw new Error('RETAIL CRM ERROR')
+    return resp.data
   }
 
   async deliveryTypes(): Promise<CrmType[]> {
-
+    const resp = await this.axios.get('/delivery-types')
+    if (!resp.data) throw new Error('RETAIL CRM ERROR')
+    return resp.data
   }
 }

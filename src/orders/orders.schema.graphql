@@ -1,6 +1,6 @@
 type Query {
     getOrders(page: Int): OrdersResponse!
-    order(number: String!): Order
+    order(id: Int!): Order
 }
 
 type OrdersResponse {
@@ -32,7 +32,7 @@ type OrderItem {
 type Order {
     number: String!
     id: Int!
-    site: String!
+    site: String
     createdAt: String!
     status: String!
     delivery: OrderDelivery

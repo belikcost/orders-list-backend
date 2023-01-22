@@ -67,7 +67,7 @@ export class Order {
   delivery?: OrderDelivery
   @Type(() => OrderItem)
   items: OrderItem[]
-  site: string
+  site?: string
   orderType: string
 }
 
